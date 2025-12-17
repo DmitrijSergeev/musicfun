@@ -30,8 +30,11 @@ function App() {
         </div>
     }
 
+    const selectedTrack = tracks.find(track => track.id === selectedTrackId)
+
     return (
-        <div>
+        <div className={'flex gap-40'}>
+            <h1 >Musicfun</h1>
             <ul>
                 {tracks.map(track => (
                     <li key={track.id}
@@ -46,6 +49,14 @@ function App() {
                     </li>
                 ))}
             </ul>
+            <div>
+                <h3>Details</h3>
+                {
+                    selectedTrackId === null
+                        ? 'Track is not selected'
+                        : selectedTrack?.attributes.title
+                }
+            </div>
         </div>
     )
 }
