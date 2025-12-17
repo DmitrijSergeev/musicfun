@@ -1,45 +1,50 @@
 import './App.css'
 import {useEffect, useState} from "react";
+import type {Track, TracksResponse} from "./types/Types.ts";
 
 function App() {
 
-    const [tracks, setTracks] = useState(null)
+    const [tracks, setTracks] = useState<Track[]>([])
+    const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null)
 
-    useEffect( ()=>{
+    useEffect(() => {
         fetch('https://musicfun.it-incubator.app/api/1.0/playlists/tracks', {
             headers: {
-                'APIkey': '9778dd46-146a-43ee-b515-46ccd9995305'
+                'API-KEY': '0657fabc-9708-4d01-b6f8-57c04196f78c'
             }
         }).then(res => res.json())
-            .then( json => setTracks(json))
-    }, [] )
+            .then((json: TracksResponse) => setTracks(json.data))
+    }, [])
+
+    if (tracks.length === null) {
+        return <div>
+            <h1>Musicfun</h1>
+            <span>loading...</span>
+        </div>
+    }
+
+    if (tracks.length === 0) {
+        return <div>
+            <h1>Musicfun</h1>
+            <span>No tracks</span>
+        </div>
+    }
 
     return (
         <div>
-            <ul className="flex flex-col gap-4">
-                {tracks.map((track) => (
-                    <li key={track.id}>
-                        <div className="flex">Musicfun soundtrack</div>
-                        <audio
-                            src="https://musicfun.it-incubator.app/api/samurai-way-soundtrack.mp3"
-                            controls
-                        />
+            <ul>
+                {tracks.map(track => (
+                    <li key={track.id}
+                        style={{border: track.id === selectedTrackId ? '2px solid red' : 'none'}}
+                        onClick={() => setSelectedTrackId(track.id)}
+                    >
+                        <h3>
+                            {track.attributes.title}
+                        </h3>
+
+                        <audio src={track.attributes.attachments[0].url} controls></audio>
                     </li>
                 ))}
-                <li className="flex flex-col gap-4">
-                    <div className="flex">Musicfun soundtrack</div>
-                    <audio
-                        src="https://musicfun.it-incubator.app/api/samurai-way-soundtrack.mp3"
-                        controls
-                    />
-                </li>
-                <li className="flex flex-col gap-4">
-                    <div className="flex">Musicfun soundtrack instrumental</div>
-                    <audio
-                        src="https://musicfun.it-incubator.app/api/samurai-way-soundtrack-instrumental.mp3"
-                        controls
-                    />
-                </li>
             </ul>
         </div>
     )
