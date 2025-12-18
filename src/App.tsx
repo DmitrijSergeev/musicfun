@@ -6,6 +6,7 @@ function App() {
 
     const [tracks, setTracks] = useState<Track[]>([])
     const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null)
+    const [selectedTrack, setSelectedTrack] = useState<Track|null>(null)
 
     useEffect(() => {
         fetch('https://musicfun.it-incubator.app/api/1.0/playlists/tracks', {
@@ -30,18 +31,31 @@ function App() {
         </div>
     }
 
-    const selectedTrack = tracks.find(track => track.id === selectedTrackId)
+    //const selectedTrack = tracks.find(track => track.id === selectedTrackId)
 
     return (
         <div className={'flex gap-40'}>
-            <h1 >Musicfun</h1>
+            <div className={'flex gap-5 flex-col'}>
+                <h1 className={'text-4xl'}>Musicfun</h1>
+                <button className={'border-2 outline-amber-200 w-20 rounded-2xl'}
+                    onClick={()=> {
+                    setSelectedTrackId(null)
+                    setSelectedTrack(null)
+                }}>
+                    RESET
+                </button>
+            </div>
+
             <ul>
                 {tracks.map(track => (
                     <li key={track.id}
                         style={{border: track.id === selectedTrackId ? '2px solid red' : 'none'}}
-                        onClick={() => setSelectedTrackId(track.id)}
+
                     >
-                        <h3>
+                        <h3 onClick={() => {
+                            setSelectedTrackId(track.id)
+                            setSelectedTrack(track)
+                        } }>
                             {track.attributes.title}
                         </h3>
 
@@ -54,7 +68,13 @@ function App() {
                 {
                     selectedTrackId === null
                         ? 'Track is not selected'
-                        : selectedTrack?.attributes.title
+                        : (
+                            <ul>
+                                <li>{selectedTrack?.attributes.title}</li>
+                                <li>{selectedTrack?.attributes.addedAt}</li>
+                                <li>{selectedTrack?.attributes.likesCount}</li>
+                            </ul>
+                        )
                 }
             </div>
         </div>
