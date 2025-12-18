@@ -1,6 +1,6 @@
 import './App.css'
 import {useEffect, useState} from "react";
-import type {Track, TracksResponse} from "./types/Types.ts";
+import type {Track, TrackResponse, TracksResponse} from "./types/Types.ts";
 
 function App() {
 
@@ -16,6 +16,17 @@ function App() {
         }).then(res => res.json())
             .then((json: TracksResponse) => setTracks(json.data))
     }, [])
+
+    useEffect(() => {
+        if (!selectedTrackId) return
+        fetch(`https://musicfun.it-incubator.app/api/1.0/playlists/tracks/${selectedTrackId}`, {
+            headers: {
+                'API-KEY': '0657fabc-9708-4d01-b6f8-57c04196f78c'
+            }
+        }).then(res => res.json())
+            .then((json: TrackResponse) => setSelectedTrack(json.data))
+
+    }, [selectedTrackId]);
 
     if (tracks.length === null) {
         return <div>
@@ -50,12 +61,11 @@ function App() {
                 {tracks.map(track => (
                     <li key={track.id}
                         style={{border: track.id === selectedTrackId ? '2px solid red' : 'none'}}
-
                     >
                         <h3 onClick={() => {
                             setSelectedTrackId(track.id)
-                            setSelectedTrack(track)
-                        } }>
+                            setSelectedTrack(null)
+                            } }>
                             {track.attributes.title}
                         </h3>
 
@@ -65,18 +75,22 @@ function App() {
             </ul>
             <div>
                 <h3>Details</h3>
-                {
-                    selectedTrackId === null
-                        ? 'Track is not selected'
-                        : (
-                            <ul>
-                                <li>{selectedTrack?.attributes.title}</li>
-                                <li>{selectedTrack?.attributes.addedAt}</li>
-                                <li>{selectedTrack?.attributes.likesCount}</li>
-                            </ul>
-                        )
-                }
+
+                {selectedTrack === null && selectedTrackId !== null && 'Loading...'}
+
+                {selectedTrack === null && selectedTrackId === null && 'Track is not selected'}
+
+                {selectedTrack && (
+                    <ul>
+                        <li>
+                            {selectedTrack.attributes.title}
+                            {selectedTrack.attributes.addedAt}
+                            {selectedTrack.attributes.likesCount}
+                        </li>
+                    </ul>
+                )}
             </div>
+
         </div>
     )
 }
