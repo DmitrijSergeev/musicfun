@@ -1,10 +1,13 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import type {Track, TrackResponse} from "../../types/Types";
 
-
-const TrackDetail = () => {
-    const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null)
-    const [selectedTrack, setSelectedTrack] = useState<Track | null>(null)
+type Props = {
+    selectedTrackId: string|null
+    selectedTrack: Track|null
+    setSelectedTrack: (selectedTrack: Track|null) => void
+}
+export const TrackDetail = (
+    {selectedTrackId, setSelectedTrack, selectedTrack}: Props) => {
 
     useEffect(() => {
         if (!selectedTrackId) return
@@ -15,17 +18,21 @@ const TrackDetail = () => {
         }).then(res => res.json())
             .then((json: TrackResponse) => setSelectedTrack(json.data))
 
-    }, [selectedTrackId]);
+    }, [selectedTrackId, selectedTrack, setSelectedTrack]);
+
+    const isLoading =
+        selectedTrackId !== null &&
+        (selectedTrack === null || selectedTrack.id !== selectedTrackId)
 
     return (
         <div>
             <h3>Details</h3>
 
-            {selectedTrack === null && selectedTrackId !== null && 'Loading...'}
+            {selectedTrackId === null && 'Track is not selected'}
 
-            {selectedTrack === null && selectedTrackId === null && 'Track is not selected'}
+            {isLoading && 'Loading...'}
 
-            {selectedTrack && (
+            {!isLoading && selectedTrack && selectedTrackId && (
                 <ul>
                     <li>
                         {selectedTrack.attributes.title}
@@ -37,5 +44,3 @@ const TrackDetail = () => {
         </div>
     );
 };
-
-export default TrackDetail;

@@ -1,10 +1,15 @@
 import {useEffect, useState} from "react";
 import type {Track, TracksResponse} from "../../types/Types";
 
-export const TrackList = () => {
+type Props = {
+    setSelectedTrackId: (trackId: string | null) => void;
+    selectedTrackId: string | null
+    setSelectedTrack: (selectedTrack: Track|null) => void
+}
+
+export const TrackList = (
+    {setSelectedTrackId, selectedTrackId, setSelectedTrack}: Props) => {
     const [tracks, setTracks] = useState<Track[]>([])
-    const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null)
-    const [selectedTrack, setSelectedTrack] = useState<Track|null>(null)
 
     useEffect(() => {
         fetch('https://musicfun.it-incubator.app/api/1.0/playlists/tracks', {
@@ -33,7 +38,7 @@ export const TrackList = () => {
             <div className={'flex gap-5 flex-col'}>
                 <h1 className={'text-4xl'}>Musicfun</h1>
                 <button className={'border-2 outline-amber-200 w-20 rounded-2xl'}
-                        onClick={()=> {
+                        onClick={() => {
                             setSelectedTrackId(null)
                             setSelectedTrack(null)
                         }}>
@@ -48,7 +53,7 @@ export const TrackList = () => {
                         <h3 onClick={() => {
                             setSelectedTrackId(track.id)
                             setSelectedTrack(null)
-                        } }>
+                        }}>
                             {track.attributes.title}
                         </h3>
 
