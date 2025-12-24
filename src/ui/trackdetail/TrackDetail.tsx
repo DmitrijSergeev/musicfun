@@ -1,5 +1,6 @@
 import {useEffect} from "react";
 import type {Track, TrackResponse} from "../../types/Types";
+import {getTrack} from "../../dal/api/api";
 
 type Props = {
     selectedTrackId: string|null
@@ -11,14 +12,16 @@ export const TrackDetail = (
 
     useEffect(() => {
         if (!selectedTrackId) return
-        fetch(`https://musicfun.it-incubator.app/api/1.0/playlists/tracks/${selectedTrackId}`, {
-            headers: {
-                'API-KEY': '0657fabc-9708-4d01-b6f8-57c04196f78c'
-            }
-        }).then(res => res.json())
-            .then((json: TrackResponse) => setSelectedTrack(json.data))
 
-    }, [selectedTrackId, selectedTrack, setSelectedTrack]);
+        getTrack(selectedTrackId)
+            .then((json: TrackResponse | null) => {
+                if (json?.data) {
+                    setSelectedTrack(json.data)
+                }
+            })
+
+    }, [selectedTrackId, setSelectedTrack])
+
 
     const isLoading =
         selectedTrackId !== null &&
@@ -35,8 +38,12 @@ export const TrackDetail = (
             {!isLoading && selectedTrack && selectedTrackId && (
                 <ul>
                     <li>
-                        {selectedTrack.attributes.title}
-                        {selectedTrack.attributes.addedAt}
+                        <div>
+                            {selectedTrack.attributes.title}
+                        </div>
+                        <div>
+                            {selectedTrack.attributes.addedAt}
+                        </div>
                         {selectedTrack.attributes.likesCount}
                     </li>
                 </ul>

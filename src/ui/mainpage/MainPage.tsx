@@ -1,5 +1,5 @@
-import {TrackList} from "../../components/tracklist/TrackList";
-import {TrackDetail} from "../../components/trackdetail/TrackDetail.tsx";
+import {TrackList} from "../tracklist/TrackList";
+import {TrackDetail} from "../../ui/trackdetail/TrackDetail.tsx";
 import {useState} from "react";
 import type {Track} from "../../types/Types";
 
