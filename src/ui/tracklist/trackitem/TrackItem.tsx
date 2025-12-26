@@ -6,6 +6,7 @@ type Props = {
     setSelectedTrack: (track: Track|null)=> void
     selectedTrackId: string|null
 }
+
 export const TrackItem = (
     {track, selectedTrackId, setSelectedTrack, setSelectedTrackId}: Props) => {
 

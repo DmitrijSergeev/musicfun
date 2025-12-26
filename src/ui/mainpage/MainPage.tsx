@@ -1,11 +1,9 @@
 import {TrackList} from "../tracklist/TrackList";
-import {TrackDetail} from "../../ui/trackdetail/TrackDetail.tsx";
-import {useState} from "react";
-import type {Track} from "../../types/Types";
+import {useTrackSelection} from "../../bll/useTrackSelection";
+import {TrackDetail} from "../trackdetail/TrackDetail";
 
 export const MainPage = () => {
-    const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null)
-    const [selectedTrack, setSelectedTrack] = useState<Track | null>(null)
+    const {selectedTrack, setSelectedTrack, setSelectedTrackId, selectedTrackId} = useTrackSelection()
     return (
         <div className={'flex gap-40'}>
             <TrackList selectedTrackId={selectedTrackId}
