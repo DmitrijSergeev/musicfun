@@ -1,26 +1,13 @@
-import {useEffect} from "react";
-import type {Track, TrackResponse} from "../../types/Types";
-import {getTrack} from "../../dal/api/api";
+import {useTrackDetail} from "../../bll/useTrackDetail";
 
 type Props = {
-    selectedTrackId: string|null
-    selectedTrack: Track|null
-    setSelectedTrack: (selectedTrack: Track|null) => void
+    selectedTrackId: string | null
 }
+
 export const TrackDetail = (
-    {selectedTrackId, setSelectedTrack, selectedTrack}: Props) => {
+    {selectedTrackId}: Props) => {
 
-    useEffect(() => {
-        if (!selectedTrackId) return
-
-        getTrack(selectedTrackId)
-            .then((json: TrackResponse | null) => {
-                if (json?.data) {
-                    setSelectedTrack(json.data)
-                }
-            })
-
-    }, [selectedTrackId, setSelectedTrack])
+    const {selectedTrack} = useTrackDetail({selectedTrackId});
 
 
     const isLoading =
